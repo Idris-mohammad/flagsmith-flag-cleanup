@@ -12,21 +12,23 @@
   <script>
     const ENV_KEY = "8jfoMNnyeSMjAvwzRTRci6";
 
-    async function loadFlags() {
+    // Loads the environment's flags and returns an object with hasFeature(name)
+    async function loadFlagsmith() {
       const res = await fetch("https://edge.api.flagsmith.com/api/v1/flags/", {
         headers: { "X-Environment-Key": ENV_KEY }
       });
       const flags = await res.json();
-      return Object.fromEntries(flags.map(f => [f.feature.name, f.enabled]));
+      const enabled = new Set(flags.filter(f => f.enabled).map(f => f.feature.name));
+      return { hasFeature: name => enabled.has(name) };
     }
 
-    loadFlags().then(flags => {
-      // Feature flag: new_checkout
-      if (flags["new_checkout"]) {
+    loadFlagsmith().then(flagsmith => {
+      // Feature flag evaluation: new_checkout
+      if (flagsmith.hasFeature("new_checkout")) {
         document.getElementById("checkout-btn").style.display = "inline-block";
       }
-      // Feature flag: old_banner
-      if (flags["old_banner"]) {
+      // Feature flag evaluation: old_banner
+      if (flagsmith.hasFeature("old_banner")) {
         document.getElementById("banner").style.display = "block";
       }
     });
