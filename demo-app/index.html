@@ -6,7 +6,6 @@
 </head>
 <body>
   <h1>Demo Store</h1>
-  <div id="banner" style="display:none">Free shipping this week!</div>
   <button id="checkout-btn" style="display:none">Checkout</button>
 
   <script>
@@ -26,10 +25,6 @@
       // Feature flag evaluation: new_checkout
       if (flagsmith.hasFeature("new_checkout")) {
         document.getElementById("checkout-btn").style.display = "inline-block";
-      }
-      // Feature flag evaluation: old_banner
-      if (flagsmith.hasFeature("old_banner")) {
-        document.getElementById("banner").style.display = "block";
       }
     });
   </script>
