@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Toggle Wars Demo Store</title>
+</head>
+<body>
+  <h1>Demo Store</h1>
+  <div id="banner" style="display:none">Free shipping this week!</div>
+  <button id="checkout-btn" style="display:none">Checkout</button>
+
+  <script>
+    const ENV_KEY = "8jfoMNnyeSMjAvwzRTRci6";
+
+    async function loadFlags() {
+      const res = await fetch("https://edge.api.flagsmith.com/api/v1/flags/", {
+        headers: { "X-Environment-Key": ENV_KEY }
+      });
+      const flags = await res.json();
+      return Object.fromEntries(flags.map(f => [f.feature.name, f.enabled]));
+    }
+
+    loadFlags().then(flags => {
+      // Feature flag: new_checkout
+      if (flags["new_checkout"]) {
+        document.getElementById("checkout-btn").style.display = "inline-block";
+      }
+      // Feature flag: old_banner
+      if (flags["old_banner"]) {
+        document.getElementById("banner").style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
